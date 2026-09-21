@@ -1,0 +1,23 @@
+{
+  "$comment": "Sample inventory for the Warehouse-Copilot lookup prototype. Shape: one object per item with sku, name, location, quantity.",
+  "items": [
+    {
+      "location": "Aisle A, Bin 12",
+      "name": "Box of AA batteries (24-pack)",
+      "quantity": 48,
+      "sku": "WH-1001"
+    },
+    {
+      "location": "Aisle B, Bin 03",
+      "name": "Packing tape roll (2-inch)",
+      "quantity": 0,
+      "sku": "WH-1002"
+    },
+    {
+      "location": "Aisle A, Bin 27",
+      "name": "Work gloves, size L",
+      "quantity": 15,
+      "sku": "WH-1003"
+    }
+  ]
+}
