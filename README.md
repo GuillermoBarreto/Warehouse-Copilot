@@ -19,6 +19,22 @@ Before implementation, define a sample inventory format and choose the applicati
 stack. Use sample data for the prototype so it can be tried without connecting to
 a live warehouse system.
 
+## Sample data format
+
+`inventory.sample.json` holds the prototype data. Each item is one object with
+exactly these fields:
+
+| Field      | Type    | Description                                  |
+|------------|---------|----------------------------------------------|
+| `sku`      | string  | Unique product identifier (e.g. `WH-1001`)   |
+| `name`     | string  | Human-readable product name                  |
+| `location` | string  | Storage location, e.g. `Aisle A, Bin 12`     |
+| `quantity` | integer | Units on hand; `0` means out of stock        |
+
+Lookup rule for the prototype: match on `sku` (case-insensitive) or on a
+case-insensitive substring of `name`. When nothing matches, show a clear
+"item not found" message instead of an empty result.
+
 ## Contributing ideas
 
 Open an issue describing the warehouse task, an example input, and the expected
