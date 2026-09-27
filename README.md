@@ -33,7 +33,9 @@ exactly these fields:
 
 Lookup rule for the prototype: match on `sku` (case-insensitive) or on a
 case-insensitive substring of `name`. When nothing matches, show a clear
-"item not found" message instead of an empty result.
+"item not found" message instead of an empty result. The sample data includes
+an out-of-stock item (`WH-1002`, quantity `0`) to exercise the "in stock"
+vs. "out of stock" display path.
 
 ## Contributing ideas
 
