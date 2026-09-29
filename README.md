@@ -4,8 +4,20 @@ An early-stage warehouse assistant project.
 
 ## Project status
 
-This repository currently contains documentation and a license. There is no
-runnable application or installation process yet.
+This repository currently contains the sample inventory data, the MIT license,
+and `inventory_lookup.py` — a small first-milestone prototype for the CLI
+lookup. No installation process is needed.
+
+## Running the prototype
+
+```bash
+python inventory_lookup.py WH-1001
+python inventory_lookup.py "work gloves"
+```
+
+Give it a product SKU or name. It prints the matching item's storage
+location and available quantity, or a clear message when the item cannot
+be found.
 
 ## Proposed first milestone
 
