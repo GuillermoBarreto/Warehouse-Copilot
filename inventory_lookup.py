@@ -46,7 +46,10 @@ def main(argv):
         return 1
     print(f"{item['name']} ({item['sku']})")
     print(f"Location: {item['location']}")
-    print(f"Available quantity: {item['quantity']}")
+    # The sample data includes an out-of-stock item (quantity 0); surface that
+    # explicitly instead of printing a bare zero.
+    stock = "Out of stock" if item["quantity"] == 0 else f"{item['quantity']} in stock"
+    print(f"Available quantity: {stock}")
     return 0
 
 
