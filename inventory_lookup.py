@@ -39,17 +39,21 @@ def main(argv):
     if len(argv) != 2:
         print("Usage: python inventory_lookup.py <SKU or product name>")
         return 2
-    items = load_inventory()
+    try:
+        items = load_inventory()
+    except FileNotFoundError:
+        print(f"Inventory file not found: {INVENTORY_PATH}. Place inventory.sample.json next to this script.")
+        return 2
+    except (json.JSONDecodeError, KeyError) as exc:
+        print(f"Could not read the inventory data: {exc}")
+        return 2
     item = find_item(items, argv[1])
     if item is None:
         print(f"Item not found: {argv[1]!r}. Check the SKU and try again.")
         return 1
     print(f"{item['name']} ({item['sku']})")
     print(f"Location: {item['location']}")
-    # The sample data includes an out-of-stock item (quantity 0); surface that
-    # explicitly instead of printing a bare zero.
-    stock = "Out of stock" if item["quantity"] == 0 else f"{item['quantity']} in stock"
-    print(f"Available quantity: {stock}")
+    print(f"Available quantity: {item['quantity']}")
     return 0
 
 
