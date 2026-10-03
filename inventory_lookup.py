@@ -36,6 +36,7 @@ def find_item(items, query):
 
 
 def main(argv):
+    """Look up one item by SKU or name and print its location and quantity."""
     if len(argv) != 2:
         print("Usage: python inventory_lookup.py <SKU or product name>")
         return 2
