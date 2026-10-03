@@ -27,10 +27,10 @@ def find_item(items, query):
     if not q:
         return None
     for item in items:
-        if item["sku"].lower() == q:
+        if str(item.get("sku", "")).lower() == q:
             return item
     for item in items:
-        if q in item["name"].lower():
+        if q in str(item.get("name", "")).lower():
             return item
     return None
 
