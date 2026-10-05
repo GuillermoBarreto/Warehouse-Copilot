@@ -4,7 +4,7 @@ Reads inventory.sample.json and prints the storage location and available
 quantity for a product SKU or name, or a clear message when nothing matches.
 
 Usage:
-    python inventory_lookup.py <SKU or product name>
+    python inventory_lookup.py [--all] <SKU or product name>
 """
 
 import json
@@ -64,10 +64,19 @@ def format_item(item):
 
 
 def main(argv):
-    """Look up one item by SKU or name and print its location and quantity."""
-    if len(argv) != 2:
-        print("Usage: python inventory_lookup.py <SKU or product name>")
+    """Look up items by SKU or name and print their location and quantity.
+
+    With ``--all``, every match is listed instead of only the first one.
+    """
+    args = list(argv[1:])
+    show_all = False
+    if args[:1] == ["--all"]:
+        show_all = True
+        args = args[1:]
+    if len(args) != 1:
+        print("Usage: python inventory_lookup.py [--all] <SKU or product name>")
         return 2
+    query = args[0]
     try:
         items = load_inventory()
     except FileNotFoundError:
@@ -76,9 +85,18 @@ def main(argv):
     except (json.JSONDecodeError, KeyError) as exc:
         print(f"Could not read the inventory data: {exc}")
         return 2
-    item = find_item(items, argv[1])
+    if show_all:
+        matches = find_all_items(items, query)
+        if not matches:
+            print(f"No items found for {query!r}. Check the SKU and try again.")
+            return 1
+        for match in matches:
+            print(format_item(match))
+            print()
+        return 0
+    item = find_item(items, query)
     if item is None:
-        print(f"Item not found: {argv[1]!r}. Check the SKU and try again.")
+        print(f"Item not found: {query!r}. Check the SKU and try again.")
         return 1
     # The sample data includes an out-of-stock item (quantity 0); surface that
     # explicitly instead of printing a bare zero.
