@@ -19,6 +19,21 @@ Give it a product SKU or name. It prints the matching item's storage
 location and available quantity, or a clear message when the item cannot
 be found.
 
+List every match instead of only the first:
+
+```bash
+python inventory_lookup.py --all "work"
+```
+
+## Tests
+
+```bash
+python -m pytest
+```
+
+`test_inventory_lookup.py` covers SKU/name matching, the `--all` listing,
+malformed items, and the missing-file and not-found paths.
+
 ## Proposed first milestone
 
 Build a small inventory lookup prototype:
