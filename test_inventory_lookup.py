@@ -90,3 +90,16 @@ def test_main_all_lists_every_match(capsys, monkeypatch):
     assert il.main(["inventory_lookup.py", "--all", "work"]) == 0
     out = capsys.readouterr().out
     assert "Work Gloves" in out and "Work Boots" in out
+
+
+def test_main_all_flag_works_after_the_query(capsys, monkeypatch):
+    monkeypatch.setattr(il, "load_inventory", lambda path=None: ITEMS)
+    assert il.main(["inventory_lookup.py", "work", "--all"]) == 0
+    out = capsys.readouterr().out
+    assert "Work Gloves" in out and "Work Boots" in out
+
+
+def test_main_all_with_no_match_returns_one(capsys, monkeypatch):
+    monkeypatch.setattr(il, "load_inventory", lambda path=None: ITEMS)
+    assert il.main(["inventory_lookup.py", "--all", "forklift"]) == 1
+    assert "No items found" in capsys.readouterr().out
