@@ -69,10 +69,10 @@ def main(argv):
     With ``--all``, every match is listed instead of only the first one.
     """
     args = list(argv[1:])
-    show_all = False
-    if args[:1] == ["--all"]:
-        show_all = True
-        args = args[1:]
+    # Accept --all anywhere among the arguments, not just first: users type
+    # "work --all" as often as "--all work".
+    show_all = "--all" in args
+    args = [arg for arg in args if arg != "--all"]
     if len(args) != 1:
         print("Usage: python inventory_lookup.py [--all] <SKU or product name>")
         return 2
