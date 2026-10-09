@@ -54,10 +54,12 @@ def format_item(item):
     sku = item.get("sku") or "unknown SKU"
     location = item.get("location") or "unknown location"
     quantity = item.get("quantity")
-    if quantity == 0:
-        stock = "Out of stock"
-    elif isinstance(quantity, bool) or not isinstance(quantity, (int, float)):
+    # Check for bools first: in Python True == 1 and False == 0, so a malformed
+    # boolean quantity would otherwise read as a real stock count.
+    if isinstance(quantity, bool) or not isinstance(quantity, (int, float)):
         stock = "quantity unknown"
+    elif quantity == 0:
+        stock = "Out of stock"
     else:
         stock = f"{quantity} in stock"
     return f"{name} ({sku})\nLocation: {location}\nAvailable quantity: {stock}"

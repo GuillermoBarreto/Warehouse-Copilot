@@ -50,6 +50,12 @@ def test_format_item_marks_zero_quantity_out_of_stock():
     assert "Out of stock" in il.format_item(ITEMS[1])
 
 
+def test_format_item_marks_boolean_quantity_unknown():
+    # False == 0 in Python, so the bool check must come before the == 0 check.
+    assert "quantity unknown" in il.format_item({"name": "Widget", "quantity": False})
+    assert "quantity unknown" in il.format_item({"name": "Widget", "quantity": True})
+
+
 def test_load_inventory_missing_file(tmp_path):
     with pytest.raises(FileNotFoundError):
         il.load_inventory(tmp_path / "missing.json")
