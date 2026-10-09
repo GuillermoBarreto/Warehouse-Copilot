@@ -23,7 +23,12 @@ def load_inventory(path=None):
     if path is None:
         path = INVENTORY_PATH
     with open(path, encoding="utf-8") as fh:
-        return json.load(fh)["items"]
+        items = json.load(fh)["items"]
+    if not isinstance(items, list):
+        # A hand-edited JSON file with a non-list "items" would otherwise blow
+        # up later with a confusing AttributeError; fail here with a clear message.
+        raise ValueError(f"Expected a list of items in {path}, got {type(items).__name__}")
+    return items
 
 
 def find_all_items(items, query):
@@ -84,7 +89,7 @@ def main(argv):
     except FileNotFoundError:
         print(f"Inventory file not found: {INVENTORY_PATH}. Place inventory.sample.json next to this script.")
         return 2
-    except (json.JSONDecodeError, KeyError) as exc:
+    except (json.JSONDecodeError, KeyError, ValueError) as exc:
         print(f"Could not read the inventory data: {exc}")
         return 2
     if show_all:
