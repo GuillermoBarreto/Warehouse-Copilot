@@ -50,6 +50,12 @@ def test_format_item_marks_zero_quantity_out_of_stock():
     assert "Out of stock" in il.format_item(ITEMS[1])
 
 
+def test_format_item_marks_boolean_quantity_unknown():
+    # False == 0 in Python, so the bool check must come before the == 0 check.
+    assert "quantity unknown" in il.format_item({"name": "Widget", "quantity": False})
+    assert "quantity unknown" in il.format_item({"name": "Widget", "quantity": True})
+
+
 def test_load_inventory_missing_file(tmp_path):
     with pytest.raises(FileNotFoundError):
         il.load_inventory(tmp_path / "missing.json")
@@ -59,6 +65,21 @@ def test_load_inventory_reads_items(tmp_path):
     path = tmp_path / "inv.json"
     path.write_text(json.dumps({"items": ITEMS}), encoding="utf-8")
     assert il.load_inventory(path) == ITEMS
+
+
+def test_load_inventory_rejects_non_list_items(tmp_path):
+    path = tmp_path / "inv.json"
+    path.write_text(json.dumps({"items": {"sku": "WH-1"}}), encoding="utf-8")
+    with pytest.raises(ValueError, match="Expected a list of items"):
+        il.load_inventory(path)
+
+
+def test_main_reports_malformed_items_shape(capsys, tmp_path, monkeypatch):
+    path = tmp_path / "inv.json"
+    path.write_text(json.dumps({"items": "not-a-list"}), encoding="utf-8")
+    monkeypatch.setattr(il, "INVENTORY_PATH", path)
+    assert il.main(["inventory_lookup.py", "WH-1001"]) == 2
+    assert "Could not read" in capsys.readouterr().out
 
 
 def test_main_usage_error(capsys):
