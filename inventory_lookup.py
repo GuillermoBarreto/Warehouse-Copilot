@@ -23,7 +23,12 @@ def load_inventory(path=None):
     if path is None:
         path = INVENTORY_PATH
     with open(path, encoding="utf-8") as fh:
-        items = json.load(fh)["items"]
+        data = json.load(fh)
+    if not isinstance(data, dict):
+        # A bare top-level array would raise TypeError on ["items"]; fail here
+        # with a clear message instead of a raw traceback.
+        raise ValueError(f"Expected an object with an \"items\" list in {path}, got {type(data).__name__}")
+    items = data["items"]
     if not isinstance(items, list):
         # A hand-edited JSON file with a non-list "items" would otherwise blow
         # up later with a confusing AttributeError; fail here with a clear message.
@@ -37,10 +42,10 @@ def find_all_items(items, query):
     q = query.strip().lower()
     if not q:
         return []
-    sku_hits = [item for item in items if str(item.get("sku", "")).lower() == q]
+    sku_hits = [item for item in items if isinstance(item, dict) and str(item.get("sku", "")).lower() == q]
     name_hits = [
         item for item in items
-        if q in str(item.get("name", "")).lower() and item not in sku_hits
+        if isinstance(item, dict) and q in str(item.get("name", "")).lower() and item not in sku_hits
     ]
     return sku_hits + name_hits
 
