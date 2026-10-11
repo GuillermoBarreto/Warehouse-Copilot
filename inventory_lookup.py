@@ -71,7 +71,8 @@ def format_item(item):
     elif quantity == 0:
         stock = "Out of stock"
     else:
-        stock = f"{quantity} in stock"
+        display = int(quantity) if isinstance(quantity, float) and quantity.is_integer() else quantity
+        stock = f"{display} in stock"
     return f"{name} ({sku})\nLocation: {location}\nAvailable quantity: {stock}"
 
 
